@@ -41,7 +41,7 @@ jobs:
           echo "${{ steps.auth.outputs.access_token }}" | docker login \
             -u oauth2accesstoken \
             --password-stdin \
-            https://${{ env.REGION }}-docker.pkg.dev
+            https://${{ env.REGION }}-docker.pkg.dev 
 
       # 3. Build and Push the Image
       - name: Build and Push
