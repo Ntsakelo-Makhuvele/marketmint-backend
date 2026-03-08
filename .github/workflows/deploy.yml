@@ -30,13 +30,18 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
         with:
+          token_format: 'access_token'
           project_id: ${{ env.PROJECT_ID }}
           workload_identity_provider: ${{ env.WIF_PROVIDER }}
           service_account: ${{ env.WIF_SERVICE_ACCOUNT }}
 
       # 2. Configure Docker to use Artifact Registry
-      - name: Docker Auth
-        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+      - name: 'Docker Auth'
+        run: |
+          echo "${{ steps.auth.outputs.access_token }}" | docker login \
+            -u oauth2accesstoken \
+            --password-stdin \
+            https://${{ env.REGION }}-docker.pkg.dev
 
       # 3. Build and Push the Image
       - name: Build and Push
