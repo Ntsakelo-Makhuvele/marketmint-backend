@@ -4,6 +4,6 @@ app = FastAPI(title="Market Mint API", description="API for Market Mint applicat
 
 @app.get("/")
 async def read_root():
-    return {"message": "Welcome to the Market Mint API!"}
+    return {"message": "Welcome to the Market Mint API! Updated"}
 
 
