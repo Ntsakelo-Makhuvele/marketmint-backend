@@ -2,23 +2,22 @@ from fastapi import FastAPI
 from src.routes.campaign_routes import campaign_router
 from src.routes.upload_routes import upload_router
 #from contextlib import asynccontextmanager
-#from src.database.database import init_db
+from src.database.database import init_db
 
-# @asynccontextmanager
-# async def life_span(app: FastAPI):
-#        print(f"server is starting...")
-#        try:
-#           import asyncio
-#           asyncio.create_task(init_db())
-#           print(f"Database initialized succesfully")  
-#        except Exception as e:
-#              print(f"Database initialization failed: {e}")    
-#        yield 
-#        print(f"server has been stopped")
+async def life_span(app: FastAPI):
+       print(f"server is starting...")
+       try:
+          await init_db()
+          print(f"Database initialized succesfully")  
+       except Exception as e:
+             print(f"Database initialization failed: {e}")    
+       yield 
+       print(f"server has been stopped")
 
 app = FastAPI(title="Market Mint API", 
               description="API for Market Mint application", 
-              version="1.0.0"
+              version="1.0.0",
+              lifespan=life_span
               )
 
 
