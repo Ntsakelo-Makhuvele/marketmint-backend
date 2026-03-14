@@ -1,4 +1,4 @@
-from sqlmodel import  SQLModel
+from sqlmodel import SQLModel
 from sqlalchemy.ext.asyncio import create_async_engine
 from src.core.config import Config
 
