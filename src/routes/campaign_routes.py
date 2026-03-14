@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from src.services.campaign import CampaignService
-from src.models.campaign_model import CampaignCreateRequest
+#from src.models.campaign_model import CampaignCreateRequest
+from src.schemas.campaign import CampaignCreateRequest
 
 campaign_service = CampaignService()
 campaign_router = APIRouter()

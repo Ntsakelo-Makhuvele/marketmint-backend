@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from google import genai
-from src.models.campaign_model import CampaignCreateRequest, CampaignAssets
+from src.schemas.campaign import CampaignCreateRequest, CampaignAssets
 from google.genai import types
 import time
 import json

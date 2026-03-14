@@ -1,8 +1,23 @@
 from fastapi import FastAPI
 from src.routes.campaign_routes import campaign_router
+from src.routes.upload_routes import upload_router
+from contextlib import asynccontextmanager
+from src.database.database import init_db
 
-app = FastAPI(title="Market Mint API", description="API for Market Mint application", version="1.0.0")
+@asynccontextmanager
+async def life_span(app: FastAPI):
+       print(f"server is starting...")
+       await init_db()
+       yield 
+       print(f"server has been stopped")
+
+app = FastAPI(title="Market Mint API", 
+              description="API for Market Mint application", 
+              version="1.0.0",
+              lifespan=life_span
+              )
 
 
 #app.include_router(router=create_email_campaign, prefix="/v1/campaign", tags=["Campaign"])
 app.include_router(campaign_router, prefix="/v1/campaign", tags=["Campaign"])
+app.include_router(upload_router, prefix='/v1/upload', tags=["Upload"])
