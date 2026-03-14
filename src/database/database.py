@@ -1,12 +1,15 @@
-from sqlmodel import create_engine, text, SQLModel
-from sqlalchemy.ext.asyncio import AsyncEngine
+from sqlmodel import  SQLModel
+from sqlalchemy.ext.asyncio import create_async_engine
 from src.core.config import Config
 
-engine = AsyncEngine(
-    create_engine(
+engine = create_async_engine(
     url=Config.DATABASE_URL,
-    echo=True
-    ))
+    echo=True,
+    connect_args={
+        "command_timeout": 60,
+        "ssl":"prefer"
+    }
+    )
 
 async def init_db():
     async with  engine.begin() as conn:
