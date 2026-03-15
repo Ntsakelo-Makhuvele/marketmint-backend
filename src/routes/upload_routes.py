@@ -7,8 +7,11 @@ upload_router = APIRouter()
 
 @upload_router.post('/')
 async def upload_file(bucket_name: str,file:UploadFile=File(...)):
-      result = await upload_service.upload_file(bucket_name=bucket_name,file=file)
-      if result:
-            return {"file_url":result}
-      else:
-          raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail='Something went wrong')
+      try:
+            result = await upload_service.upload_file(bucket_name=bucket_name,file=file)
+            if result:
+                  return {"file_url":result}
+            else:
+              raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail='Something went wrong')
+      except HTTPException as e:
+              raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail='Something went wrong')

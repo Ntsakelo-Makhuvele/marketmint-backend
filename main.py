@@ -1,9 +1,15 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from src.routes.campaign_routes import campaign_router
 from src.routes.upload_routes import upload_router
-#from contextlib import asynccontextmanager
+from src.database.database import engine # Import the engine directly
+from src.routes.brand import brand_router
 from src.database.database import init_db
+import sqlalchemy
 
+from sqlmodel import SQLModel
+
+@asynccontextmanager
 async def life_span(app: FastAPI):
        print(f"server is starting...")
        try:
@@ -21,6 +27,6 @@ app = FastAPI(title="Market Mint API",
               )
 
 
-#app.include_router(router=create_email_campaign, prefix="/v1/campaign", tags=["Campaign"])
 app.include_router(campaign_router, prefix="/v1/campaign", tags=["Campaign"])
 app.include_router(upload_router, prefix='/v1/upload', tags=["Upload"])
+app.include_router(brand_router, prefix="/v1/brand", tags=["Brand"])
