@@ -13,7 +13,7 @@ from sqlmodel import SQLModel
 async def life_span(app: FastAPI):
        print(f"server is starting...")
        try:
-          await init_db()
+          init_db()
           print(f"Database initialized succesfully")  
        except Exception as e:
              print(f"Database initialization failed: {e}")    

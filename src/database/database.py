@@ -1,30 +1,17 @@
-from sqlmodel import SQLModel
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
+from sqlmodel import text,Session, create_engine
 from src.core.config import Config
 
-engine = create_async_engine(
+engine = create_engine(
     url=Config.DATABASE_URL,
-    echo=True,
-    connect_args={
-        "command_timeout": 60,
-        "ssl":"prefer"
-    }
+    echo=True
     )
 
-async def init_db():
-    async with  engine.begin() as conn:
-        from src.models.brand import Brand
+def init_db():
+    with  engine.begin() as conn:
+      conn.execute(text("SELECT 1"))
 
-        await conn.run_sync(SQLModel.metadata.create_all)
-
-async def get_session() -> AsyncSession:
-    Session = sessionmaker(
-        bind=engine,
-        class_=AsyncSession,
-        expire_on_commit=False
-    )
-    async with Session() as session:
+def get_session() :
+    with Session(engine) as session:
         yield session
 
 

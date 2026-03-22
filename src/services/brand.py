@@ -1,9 +1,10 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
-from src.schemas.brand import BrandCreateRequest, BrandToneCreateRequest
-from src.models.brand import Brand, BrandTone
+from src.schemas.brand import BrandCreateRequest, BrandToneCreateRequest,BrandAssetCreateRequest
+from src.models.brand import Brand, BrandTone, BrandAsset
 from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import select
 from typing import List
+import uuid
 
 class BrandService:
     async def create_brand(self,brand_data:BrandCreateRequest, session:AsyncSession):
@@ -33,9 +34,8 @@ class BrandService:
         except SQLAlchemyError as e:
             print(e)
     
-    async def create_brand_tone(self, brand_tone_list:List[BrandToneCreateRequest], brand_uuid:str, session:AsyncSession):
-        try:
-            for brand_tone in brand_tone_list:
+    async def create_brand_tone(self, brand_tone:BrandToneCreateRequest, brand_uuid:str, session:AsyncSession):
+        try:            
                 brand_tone_dict = brand_tone.model_dump()
                 new_brand_tone = BrandTone(
                     **brand_tone_dict,
@@ -46,6 +46,24 @@ class BrandService:
 
                 await session.commit()
 
-            return brand_tone_list
+                return brand_tone_list
         except SQLAlchemyError as e:
             print(e)
+
+    async def create_brand_asset(self,asset_data:BrandAssetCreateRequest, session:AsyncSession):
+        try:
+             #asset_data_dict = asset_data.model_dump()
+
+             new_asset_data = BrandAsset(
+                 **asset_data
+             )
+
+             session.add(new_asset_data)
+
+             await session.commit()
+
+             return asset_data   
+        except SQLAlchemyError as e:
+            print(e)
+    
+   

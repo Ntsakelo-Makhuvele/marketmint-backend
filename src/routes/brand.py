@@ -17,7 +17,7 @@ async def create_brand(data:BrandCreateRequest,session:AsyncSession = Depends(ge
         
         result = await brand_service.create_brand(brand_data=data,session=session)
         if result is not None:
-           return result[0]
+           return result
         else:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="something went wrong") 
     except SQLAlchemyError as e:
