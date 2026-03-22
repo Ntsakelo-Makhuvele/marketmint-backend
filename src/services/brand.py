@@ -46,7 +46,7 @@ class BrandService:
 
                 await session.commit()
 
-                return brand_tone_list
+                return brand_tone
         except SQLAlchemyError as e:
             print(e)
 
