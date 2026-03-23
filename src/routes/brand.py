@@ -32,12 +32,34 @@ async def get_brand(brand_uuid:str, session:AsyncSession = Depends(get_session))
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=f"{e}")
      
 @brand_router.post('/tone')
-async def create_brand_tone(brand_tone_list: List[BrandToneCreateRequest],brand_uuid:str, session: AsyncSession = Depends(get_session)):
+async def create_brand_tone(brand_tone: BrandToneCreateRequest,brand_uuid:str, session: AsyncSession = Depends(get_session)):
     try:
-        result = await brand_service.create_brand_tone(brand_tone_list=brand_tone_list,brand_uuid=brand_uuid,session=session)
+        result = await brand_service.create_brand_tone(brand_tone=brand_tone,brand_uuid=brand_uuid,session=session)
         if result is not None:
             return {"processed":result}
         else:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="something went wrong")
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=f"{e}")
+    
+@brand_router.get('/tone/{tone_uuid}')
+async def get_brand_tone(tone_uuid:str,session:AsyncSession=Depends(get_session)):
+    try:
+        result = await brand_service.get_brand_tone(tone_uuid=tone_uuid,session=session)
+        if result is not None:
+            return result
+        else:
+            raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="no content found for this request")
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=f"{e}")
+    
+@brand_router.delete('/tone/{tone_uuid}')
+async def remove_brand_tone(tone_uuid:str, session:AsyncSession = Depends(get_session)):
+    try:
+        result = await brand_service.remove_brand_tone(tone_uuid=tone_uuid,session=session)
+        if result is not None:
+            return result
+        else:
+            raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="no content found for this request")
     except SQLAlchemyError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=f"{e}")

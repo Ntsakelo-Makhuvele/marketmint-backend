@@ -6,11 +6,11 @@ import uuid
 class BrandCreateRequest(BaseModel):
     name: str
     description: str
-    user_id: str 
+    creator_id: str 
     brand_tone: Optional[List[BrandTone]] = None
 
 class BrandToneCreateRequest(BaseModel):
-    name: str  
+    name: str 
     target_audience: str
     brand_attributes: List[str] 
     forbidden_words: List[str] 

@@ -2,7 +2,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.schemas.brand import BrandCreateRequest, BrandToneCreateRequest,BrandAssetCreateRequest
 from src.models.brand import Brand, BrandTone, BrandAsset
 from sqlalchemy.exc import SQLAlchemyError
-from sqlmodel import select
+from sqlmodel import select,delete
 from typing import List
 import uuid
 
@@ -17,9 +17,9 @@ class BrandService:
 
             session.add(new_brand_data)
 
-            await session.commit()
+            session.commit()
             
-            return new_brand_data
+            return brand_data_dict
         except SQLAlchemyError as e:
             print(e)   
 
@@ -27,7 +27,7 @@ class BrandService:
     async def get_brand(self,brand_uuid:str, session:AsyncSession):
         try:
             statement = select(Brand).where(Brand.uuid == brand_uuid)
-            result = await session.execute(statement)
+            result = session.execute(statement)
             brand = result.scalars().all()
 
             return brand if brand is not None else None  
@@ -44,7 +44,7 @@ class BrandService:
 
                 session.add(new_brand_tone)
 
-                await session.commit()
+                session.commit()
 
                 return brand_tone
         except SQLAlchemyError as e:
@@ -65,5 +65,28 @@ class BrandService:
              return asset_data   
         except SQLAlchemyError as e:
             print(e)
+
+    async def get_brand_tone(self,tone_uuid:str, session:AsyncSession):
+        try:
+            statement = select(BrandTone).where(BrandTone.uuid==tone_uuid)
+            result = session.execute(statement)
+            tone = result.scalars().all()
+            return tone if tone is not None else None
+        except SQLAlchemyError as e:
+            print(e)
+
+    async def remove_brand_tone(self, tone_uuid:str, session:AsyncSession):
+        try:
+            statement = delete(BrandTone).where(BrandTone.uuid==tone_uuid).returning(BrandTone)
+            result = session.execute(statement)
+            removed_tone = result.scalars().all()
+            session.commit()
+            return removed_tone if removed_tone is not None else None
+        except SQLAlchemyError as e:
+            print(e)
+ 
+    
+
+    
     
    
